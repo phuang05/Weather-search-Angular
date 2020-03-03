@@ -1,0 +1,34 @@
+/* You can add global styles to this file, and also import other style files */
+h1{
+    text-align: center;
+    color: white;
+
+}
+
+.star{
+    color: red;
+}
+
+#search_board{
+    align-self: center;
+    background-color: rgb(102, 114, 167);
+    margin:30px auto;
+    color: white;
+    div{
+        margin: 10px 0px;
+
+        div{
+            input{
+                width:300px;
+            }
+        }
+    }
+
+    .buttons button{
+        width:100px;
+        margin:10px 10px;
+    }
+    
+}
+
+

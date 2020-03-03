@@ -1,0 +1,178 @@
+h1{
+    text-align: center;
+    color: white;
+
+}
+
+.star{
+    color: red;
+}
+
+#search{
+    display: inline;
+    text-align: center;
+}
+
+div{
+    font-size: 20px;
+}
+
+#search_board{
+
+    // align-self: center;
+
+    background-color: rgb(78, 145, 184);
+    // margin:30px auto;
+    color: white;
+    div{
+        margin: 10px 0px;
+
+        div{
+            input{
+                width:300px;
+            }
+        }
+    }
+
+    .buttons button{
+        margin: 0px auto;
+        color: black;
+        width:100px;
+        margin:10px 10px;
+        div{
+            width:20px;
+            height: 5px;
+        }
+        font-size: 18px;
+    }
+    
+}
+#resultInfo{
+    #Current{
+        #currentPart{
+            background-color:#66CCFF;
+            font-size: 20px;
+            div{
+                display: inline-block;
+                div{
+                    #temperature{
+                        display: flex;
+                        .oicon{
+                            width:10px;
+                            height:10px;
+                        }
+                    }
+                    #curSummary{
+                        font-size: 11px;;
+                    }
+                }
+
+                #statepic{
+                    width:100px;
+                    height:100px;
+                }
+            }
+            #icon {
+                display: flex;
+                div {
+                    padding: 10px;
+                    img{
+                        width:35px;
+                        height:35px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+
+#tabcontent{
+    width:200px;
+    height:200px;
+}
+
+
+
+.modal-content{
+
+    .modal-header{
+        background-color: rgb(78, 145, 184);
+        .modal-title{
+            font-size: 30px;
+        }
+        
+    }
+
+    .modal-body{
+        background-color: rgb(133, 195, 231);
+        display: flex;
+        div{
+            width:100%;
+            // font-size: 30px;
+            #modalCity{
+                font-size: 30px;
+                
+            }
+            #temperatureCombo{
+                font-size: 30px;
+                display: flex;
+            }
+            .oicon{
+                width:10px;
+                height:10px;
+                position: relative;
+                top:-10px;
+            }
+            #modalSummary{
+                font-size: 20px;
+            }
+            #summaryIcon{
+                width:50%;
+                height:100%;
+            }
+            
+        }
+    }
+
+    .modal-footer{
+        font-size: 18px;
+        div{
+            position: relative;
+            left:0%;
+            text-align: left;
+        }
+        
+        background-color: rgb(133, 195, 231);
+    }
+
+}
+#tabNav{
+    // float: right;
+    // position: relative;
+    // right:10px;
+    #tabBut{
+        float: right;
+        position: relative;
+        right:10px;
+        .tabIcon{
+        width:50px;
+        height:50px;
+        }
+    }
+}
+
+#favoriteList{
+    li{
+        div{
+            img{
+                width:80px;
+            }
+        }
+    }
+}
+
+.material-icons.orange600 { 
+    color: #FB8C00; 
+}

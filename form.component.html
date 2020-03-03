@@ -1,0 +1,350 @@
+<!-- <link rel="stylesheet" href="https://stackpath.mycdnacom/my/4.a.1/css/my.mia.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"> -->
+<!-- <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-my/3.a.7/css/my.mia.css"> -->
+
+
+
+<!-- <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://cdn.staticfile.org/twitter-my/3.a.7/js/my.mia.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script> -->
+<!-- <script src="https://stackpath.mycdnac
+om/my/3.a.
+1/js/my.mia.
+js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+<script src="https://stackpath.mycdnacom/my/4.a.1/js/my.mia.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script> -->
+
+
+
+
+                
+
+
+
+<div #test class="container-fluid">
+
+<div class="  col-sm-12 col-xs-12 col-md-10 col-lg-8  offset-md-2 offset-lg-2" id="search_board">
+    <h1>Weather Search</h1>
+
+    <form  role="form">
+            <div class="form-inline">
+                    <label class="col-md-2 control-label">
+                        Street
+                        <label class="star" id="star">
+                            *
+                        </label>
+                    </label>
+                    <div class="col-md-7 col-sm-12">
+                        <input type="text" class="col-md-7 col-sm-12 form-control" name="street" [disabled]="isDisabled" [(ngModel)]="location.street" placeholder="Enter Street Name" required #street="ngModel">
+                            <div *ngIf="street.invalid && (street.dirty|| city.touched )" class="alert alert-danger">
+                                <div *ngIf="street.errors.required">
+                                    Please enter a street.
+                                </div>
+                            </div>
+                        <!-- <p >ssss{{street.className}}</p> -->
+                    </div>
+
+            </div>
+            <div class="form-inline">
+                <label class="col-md-2 control-label">
+                    City
+                    <span class="star">*</span>
+                </label>
+                <div class="col-md-7 col-sm-12">
+                    <input type="text" class="col-md-7 col-md-12 form-control" name="city" [disabled]="isDisabled" [(ngModel)]="location.city" placeholder="Enter City Name" required  #city="ngModel">
+                    <div *ngIf="city.invalid && (city.dirty || city.touched)" class="alert alert-danger">
+                        <div *ngIf="city.errors.required">
+                            Please enter a city.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-inline">
+                <label  class="col-md-2 control-label">
+                    State
+                </label>
+                <div class="col-md-5 col-sm-12">
+                        <select name="state" id="state" class="col-sm-5 col-xs-12 form-control" [(ngModel)]="location.state"#state >
+
+                                <option [value]="item" *ngFor="let item of stateList">{{item}}</option>
+                        </select>
+                </div>
+            </div>
+            <div class="form-inline">
+              <label class="col-md-4 control-label">
+                    <input #ischec name="ischeck" type='checkbox' [(ngModel)]="ischeck" id="cur" /><span>current location</span>
+              </label>
+            </div>
+            <!-- <button type="submit" class="btn btn-default">提交</button> -->
+            <div class="buttons col-md-8 col-md-offset-3">
+                <button  (click)="doSearch()"><div class="material-icons">search</div>Search</button>
+                <button  (click)="doClear()"><div class="material-icons">clear_all</div>Clear</button>
+            </div>
+
+    </form>
+</div>
+</div>
+<div class="resultButtons col-md-8 col-md-offset-3" >
+        <button  (click)="doResults()"[style.background-color]="resultButtonColor"[style.color]="resultButtonFontColor">Results</button>
+        <button  (click)="showFavorite()" [style.background-color]="favoriteButtonColor"[style.color]="favoriteButtonFontColor">Favorites</button>
+    
+</div>
+
+
+<div class="progress" [style.display] = "zeroDisplay">
+    <div  class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+</div>
+<div class="progress" [style.display] = "halfDisplay">
+    <div  class="progress-bar" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+</div>
+<div class="alert alert-primary" role="alert"[style.display] = "invalidInputDisplay">
+    invalid adress
+</div>
+<div class="alert alert-primary" role="alert"[style.display] = "noRecordsDisplay">
+    No Records
+</div>
+    
+
+
+
+
+<div id="resultInfo" class="infoForm col-md-8 col-md-offset-2 "  [style.display]="infoDisplay">
+    <!-- show -->
+  <ul id="myTabs" class="nav nav-tabs col-md-12" role="tablist">
+      
+        <li class="nav-item ">
+          <a class="nav-link btn-default" href="#Current" role="tab" data-toggle="tab"aria-controls="Current">Current</a>
+        </li>
+        <li class=" nav-item">
+          <a class="nav-link" href="#Hourly"role="tab" data-toggle="tab"aria-controls="Weekly">Hourly</a>
+        </li>
+        <li class="nav-item">
+          <a class=" av-link" href="#Weekly" role="tab" data-toggle="tab"aria-controls="Weeklyt">Weekly</a>
+        </li>
+        <li class="nav-item" id="tabNav">
+            <div id="tabBut">
+                <a class="twitter-button" [href]="tweetUrl"><img class="tabIcon" src="http://csci571.com/hw/hw8/Images/Twitter.png"></a>
+                <img  (click)="doFavorite()" class="tabIcon" [src]="startUrl">
+            </div>
+        </li>
+    
+    </ul>
+
+
+    <div id="tabContent" class="tab-content">
+    <div id="Current" class="tab-pane active col-sm-offset-1 col-sm-10 row-sm-6" role="tabpanel" aria-labelledby="Current-tab" >
+      <!-- weatherInfo -->
+        <div id="currentPart" class="container">
+            <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
+                <div class="col-md-6 col-sm-6 col-xs-6 col-lg-6">
+                    <p >{{location.city}}</p>
+
+                    <p>{{current.timezone}}</p>
+                    <div id="temperature">
+                        <p>{{current.temperature}}</p>
+                        <img class="oicon" src='https://cdn3.iconfinder.com/data/icons/virtual-notebook/16/button_shape_oval-512.png'>
+                        <p>F</p>
+                    </div>
+
+                    <p id="curSummary">{{current.summary}}</p>
+                </div>
+                <img id="statepic"  [src]="statePic">
+                <!-- class="col-md-4 col-sm-4 col-xs-4 col-lg-4" -->
+            </div>
+            
+            <div id="icon" class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
+                <div id="humidity" class="col-md-2 col-sm-2 col-lg-2 col-xs-2">
+                    <img src='https://cdn2.iconfinder.com/data/icons/weather-74/24/weather-16-512.png' title='humidity'>;
+                    <p >{{current.pressure}}</p>
+                </div>
+                <div id="pressure"class="col-md-2 col-sm-2 col-lg-2 col-xs-2">
+                    <img src='https://cdn2.iconfinder.com/data/icons/weather-74/24/weather-25-512.png' title='pressure'>
+                    <p>{{current.pressure}}</p>
+                </div>
+                <div id="windSpeed"class="col-md-2 col-sm-2 col-lg-2 col-xs-2">
+                    <img src='https://cdn2.iconfinder.com/data/icons/weather-74/24/weather-27-512.png' title='windSpeed'>
+                    <p>{{current.windSpeed}}</p>
+                </div>
+                <div id="visibility"class="col-md-2 col-sm-2 col-lg-2 col-xs-2">
+                    <img src='https://cdn2.iconfinder.com/data/icons/weather-74/24/weather-30-512.png' title='visibility'>
+                    <p>{{current.visibility}}</p>
+                </div>
+                <div id="cloudCover"class="col-md-2 col-sm-2 col-lg-2 col-xs-2">
+                    <img src='https://cdn2.iconfinder.com/data/icons/weather-74/24/weather-28-512.png' title='cloudCover'>
+                    <p>{{current.cloudCover}}</p>
+                </div>
+                <div id="ozone"class="col-md-2 col-sm-2 col-lg-2 col-xs-2">
+                    <img src='https://cdn2.iconfinder.com/data/icons/weather-74/24/weather-24-512.png' title='ozone'>
+                    <p>{{current.ozone}}</p>
+                </div>
+            </div>
+        </div>
+    
+    
+    </div>
+    <div id="Hourly"  class="tab-pane " role="tabpanel" aria-labelledby="Hourly-tab">
+        <!-- Hourly -->
+        <br>
+        <ul class=""role="tablist">
+                <tr class=" dropdown">
+                  <a class=" dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Dropdown</a>
+                  <div class="dropdown-menu">
+                    <a class="dropdown-item nav-link btn-default" href="#temperatureChart"  role="tab" data-toggle="tab"aria-controls="temperature">temperatureChart</a>
+                    <a class="dropdown-item nav-link btn-default" href="#pressureChart"  role="tab" data-toggle="tab"aria-controls="pressure" >pressureChart</a>
+                    <a class="dropdown-item nav-link btn-default" href="#humidityChart"  role="tab" data-toggle="tab"aria-controls="humidity" >humidityChart</a>
+                    <a class="dropdown-item nav-link btn-default" href="#ozoneChart"  role="tab" data-toggle="tab"aria-controls="ozone" >ozoneChart</a>
+                    <a class="dropdown-item nav-link btn-default" href="#visibilityChart"  role="tab" data-toggle="tab"aria-controls="visibility" >visibilityChart</a>
+                    <a class="dropdown-item nav-link btn-default" href="#windSpeedChart"  role="tab" data-toggle="tab"aria-controls="windSpeed" >windSpeedChart</a>
+
+                  </div>
+                </tr>
+        </ul>
+
+
+        <div id="tabContent" class="tab-content">
+            <div id="temperatureChart" class="tab-pane active" role="tabpanel" aria-labelledby="temperature-tab" >
+                <div >
+                    <canvas #temperatureCanvas id="temperatureCanvas" ></canvas>
+                </div>
+            </div>
+            <div id="pressureChart" class="tab-pane active" role="tabpanel" aria-labelledby="pressure-tab" >
+                <div >
+                    <canvas #pressureCanvas id="pressureCanvas" ></canvas>
+                </div>
+            </div>
+            <div id="humidityChart" class="tab-pane active" role="tabpanel" aria-labelledby="humidity-tab" >
+                <div >
+                    <canvas #humidityCanvas id="humidityCanvas" ></canvas>
+                </div>
+            </div>
+            <div id="ozoneChart" class="tab-pane active" role="tabpanel" aria-labelledby="ozone-tab" >
+                <div >
+                    <canvas #ozoneCanvas id="ozoneCanvas" ></canvas>
+                </div>
+            </div>
+            <div id="visibilityChart" class="tab-pane active" role="tabpanel" aria-labelledby="visibility-tab" >
+                <div >
+                    <canvas #visibilityCanvas id="visibilityCanvas" ></canvas>
+                </div>        
+            </div>
+            <div id="windSpeedChart" class="tab-pane active" role="tabpanel" aria-labelledby="windSpeed-tab" >
+                <div >
+                    <canvas #windSpeedCanvas id="windSpeedCanvas" ></canvas>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    <div id="Weekly" class="tab-pane" role="tabpanel" aria-labelledby="Weekly-tab">
+        <!-- Weekly -->
+            <div #weeklyCanvasParent>
+                <canvas #weeklyCanvas id="weeklyCanvas" ></canvas>
+            </div>
+    </div>
+    </div> 
+
+</div>
+
+
+
+<button #modalButton type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg" [style.display]="isVisible ? 'block' : 'none'">Large modal</button>
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">{{modalInfo.date}}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div>
+                <p id="modalCity">{{modalInfo.city}}</p>
+                <div id="temperatureCombo">
+                    
+                        <p>{{modalInfo.temperature}}</p>
+                        <img class="oicon" src='https://cdn3.iconfinder.com/data/icons/virtual-notebook/16/button_shape_oval-512.png'>
+                        <p>F</p>
+                   
+                    
+                </div>
+                <p id="modalSummary">{{modalInfo.summary}}</p>
+            </div>
+            <div>
+                <img id="summaryIcon" src={{modalInfo.icon}} >
+                <!-- <p>{{modalInfo.icon}}</p> -->
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div>
+                <p>Precipitation:{{modalInfo.precipitation}} </p>
+                <p>Chance of Rain:{{modalInfo.chanceOfRain}} </p>
+                <p>Wind Speed:{{modalInfo.windSpeed}} </p>
+                <p>Humidity:{{modalInfo.humidity}} </p>
+                <p>Visibility:{{modalInfo.visibility}} </p>
+            </div>
+          
+        </div>
+      </div>
+    </div>
+
+  </div>
+<!-- <a class="twitter-button"href="https://twitter.com/intent/tweet?text=11&hashtags=CSCI571WeatherSearch"><img id="tweetIcon" src="./../../assets/twitter.png"></a> -->
+<!-- <img id="tweetIcon" src="./../../assets/twitter.png" onclick="https://twitter.com/intent/tweet?text=s"> -->
+
+
+
+  <div #favoriteTable id="favoriteList" class="table-responsive container-fluid" [style.display]="favoriteIsVisible" [innerHtml]= "favoriteInnerHtml">
+        
+            <tr class=" ">
+                <th class="col-xs-2 col-sm-2 col-md-2 ">#</th>
+                <th class="col-xs-2 col-sm-2 col-md-2">Image</th>
+                <th class="col-xs-3 col-sm-3 col-md-3">City</th>
+                <th class="col-xs-3 col-sm-3 col-md-3">State</th>
+                <th class="col-xs-2 col-sm-2 col-md-2"><button onClick="doDelete()">Favoritesssss</button></th>
+            </tr>
+            
+            <!-- <li class="">
+                    <div class="col-xs-2 col-md-2 ">#</div>
+                    <div class="col-xs-2 col-md-2">Image</div>
+                    <div class="col-xs-3 col-md-3">City</div>
+                    <div class="col-xs-3 col-md-3">State</div>
+                    <div class="col-xs-2 col-md-2">Favorites</div>
+            </li>
+            <li class="">
+                    <div class="col-xs-2 col-md-2 ">#</div>
+                    <div class="col-xs-2 col-md-2">Image</div>
+                    <div class="col-xs-3 col-md-3">City</div>
+                    <div class="col-xs-3 col-md-3">State</div>
+                    <div class="col-xs-2 col-md-2">Favorites</div>
+                
+    
+            </li>
+     -->
+        
+    </div>
+  <!-- {{myStorage|json}} -->
+
+
+
+  <!-- <div #favoriteTable class="table-responsive container" >
+
+    <table class="table "  ng-show="data.length">
+        <thead>
+        <tr><th>#</th><th>Image</th><th>City</th><th>State</th><th>Favorites</th></tr>
+        </thead>
+       
+            <td>{{value.id}}</td>
+            <td>{{value.name}}</td>
+            <td>
+
+            </td>
+            <td>{{value.price}}</td>
+            <td>{{value.price*value.quantity}}</td>
+            <td>
+                <button class="btn btn-danger" ng-click="removeItem(value.id)">移除</button>
+            </td>
+        </tr>
+
+    </table>
+</div> -->
